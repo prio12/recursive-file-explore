@@ -8,8 +8,10 @@ import {
   findNodePath,
   updateFileContent,
 } from "@/utils/fileUtils";
-import SidebarItem from "@/components/SidebarItem";
-import { Folder, File, Pencil, Trash } from "lucide-react";
+import SidebarItem from "@/components/sidebar/SidebarItem";
+import { WorkspacePath } from "@/components/workspace/WorkspacePath";
+import { FolderContents } from "@/components/workspace/FolderContents";
+import { FileEditor } from "@/components/workspace/FileEditor";
 
 export default function Home() {
   // Initializing the file tree state with injected dummy data
@@ -133,149 +135,27 @@ export default function Home() {
         {/* main Content */}
         <main className="flex-1 flex flex-col overflow-y-auto p-4 md:p-6 w-full">
           {/* render the active path location */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-3">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                Active Location Path
-              </p>
-              <div className="flex items-center flex-wrap gap-1 text-sm font-semibold text-slate-600">
-                {nodePath.map((node, index) => {
-                  const isLast = index === nodePath.length - 1;
-                  return (
-                    <div key={node.id} className="flex items-center gap-1">
-                      {index > 0 && (
-                        <span className="text-slate-300 font-normal">/</span>
-                      )}
-                      <button
-                        onClick={() => {
-                          if (!isLast) {
-                            setCurrentFolderId(node.id);
-                            setSelectedFile(null); // Close active code viewer context
-                          }
-                        }}
-                        disabled={isLast}
-                        className={`
-  transition-colors  max-w-27.5 sm:max-w-45 text-left
-  ${isLast ? "text-blue-500 font-bold" : "text-slate-600 hover:text-slate-700 cursor-pointer"}
-`}
-                      >
-                        {node.name}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="flex gap-2 w-full sm:w-auto">
-              <button
-                // onClick={() => handleCreateItem("folder")}
-                className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-sm transition"
-              >
-                + New Folder
-              </button>
-              <button
-                // onClick={() => handleCreateItem("file")}
-                className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-md text-xs font-semibold shadow-sm transition"
-              >
-                + New File
-              </button>
-            </div>
-          </div>
+          <WorkspacePath
+            nodePath={nodePath}
+            setCurrentFolderId={setCurrentFolderId}
+            setSelectedFile={setSelectedFile}
+          />
 
           {/* rendering all the folder/files in grid view */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {activeFolder.children?.map((item) => (
-              <div
-                key={item.id}
-                onClick={() =>
-                  item.type === "folder"
-                    ? setCurrentFolderId(item.id)
-                    : handleOpenFile(item)
-                }
-                className="group relative flex flex-col items-center justify-center p-5 bg-white border border-slate-200 rounded-xl hover:shadow-md hover:border-blue-200 transition-all cursor-pointer text-center select-none"
-              >
-                <div className="mb-3 text-slate-400 transition-transform group-hover:scale-105 duration-200">
-                  {item.type === "folder" ? (
-                    <Folder className="w-10 h-10 text-blue-500 fill-blue-500/10" />
-                  ) : (
-                    <File className="w-10 h-10 text-slate-400" />
-                  )}
-                </div>
-
-                <span
-                  className="text-xs font-semibold text-slate-700 w-full px-2 "
-                  title={item.name}
-                >
-                  {item.name}
-                </span>
-
-                <div
-                  className="absolute top-2 right-2 flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    // onClick={() => handleRenameItem(item.id, item.name)}
-                    className="p-1 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 active:bg-slate-200 rounded-md transition border border-slate-200/60 shadow-sm"
-                    title="Rename"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    // onClick={() => handleDeleteItem(item.id)}
-                    className="p-1 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 active:bg-red-200 rounded-md transition border border-red-100 shadow-sm"
-                    title="Delete"
-                  >
-                    <Trash className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {(!activeFolder.children || activeFolder.children.length === 0) && (
-              <div className="col-span-full py-16 text-center text-xs text-slate-400 font-medium">
-                This directory path is currently empty.
-              </div>
-            )}
-          </div>
+          <FolderContents
+            activeFolder={activeFolder}
+            setCurrentFolderId={setCurrentFolderId}
+            handleOpenFile={handleOpenFile}
+          />
         </main>
         {/* rendering the file */}
-        {selectedFile && (
-          <section className="fixed lg:static top-0 bottom-0 right-0 z-40 w-full sm:w-80 bg-white border-l border-slate-200 shadow-2xl lg:shadow-none flex flex-col p-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-              <div className="truncate pr-2">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                  File Workspace
-                </p>
-                <h3 className="text-sm font-bold text-slate-700 truncate">
-                  {selectedFile.name}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedFile(null)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-medium p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <textarea
-              className="flex-1 w-full p-3 border border-slate-200 rounded-lg text-xs bg-slate-50 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white resize-none"
-              value={editorContent}
-              onChange={(e) => setEditorContent(e.target.value)}
-              placeholder="Enter your custom content string structure details here..."
-            />
-
-            <div className="mt-4 pt-3 border-t border-slate-100 flex gap-2">
-              <button
-                onClick={handleSaveFile}
-                className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-semibold shadow-sm transition"
-              >
-                Save Changes
-              </button>
-            </div>
-          </section>
-        )}
+        <FileEditor
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
+          editorContent={editorContent}
+          setEditorContent={setEditorContent}
+          handleSaveFile={handleSaveFile}
+        />
       </div>
     </div>
   );
