@@ -91,3 +91,41 @@ export const deleteNode = (nodes: FileNode[], targetId: string): FileNode[] => {
       return node;
     });
 };
+
+//create a  new node (file/ folder)
+export const insertNode = (
+  nodes: FileNode[],
+  folderId: string,
+  name: string,
+  type: "folder" | "file",
+): FileNode[] => {
+  //returning node collections after creating the a new node (file/ folder)
+  return nodes.map((node) => {
+    // finding who will be the container (parent ) to the new node
+    if (node.id === folderId && node.type === "folder") {
+      //creating a new node according to the FileNode interface
+      const newNode: FileNode = {
+        id: crypto.randomUUID(), // generating a random id
+        name,
+        type,
+        children: type === "folder" ? [] : undefined, //if the user creating a folder the folder might
+        // contain children in future, so it's keeping as empty array
+
+        //if it's a file we are just adding the content as empty string
+        content: type === "file" ? "" : undefined,
+      };
+
+      //copying the nodes other properties and putting the newNode as children along with other children
+      return { ...node, children: [newNode, ...(node.children || [])] };
+    }
+
+    //searching deep to using recursive to find out the container (parent)
+    if (node.children) {
+      return {
+        ...node,
+        children: insertNode(node.children, folderId, name, type),
+      };
+    }
+    return node;
+  });
+};
