@@ -8,8 +8,7 @@ This project is mainly focused on practicing recursive tree handling, state upda
 
 ## 🔗 Live Demo
 
-https://your-project-link.vercel.app  
-_(replace this after deployment)_
+🚀 **Check it out live:** [https://recursive-file-explore.vercel.app/](https://recursive-file-explore.vercel.app/)
 
 ---
 
