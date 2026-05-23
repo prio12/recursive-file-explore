@@ -4,11 +4,13 @@ interface WorkspacePathProps {
   nodePath: FileNode[];
   setCurrentFolderId: React.Dispatch<React.SetStateAction<string>>;
   setSelectedFile: React.Dispatch<React.SetStateAction<FileNode | null>>;
+  onCreateItem: (type: "folder" | "file") => void;
 }
 export const WorkspacePath = ({
   nodePath,
   setCurrentFolderId,
   setSelectedFile,
+  onCreateItem,
 }: WorkspacePathProps) => {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-3">
@@ -47,14 +49,18 @@ export const WorkspacePath = ({
 
       <div className="flex gap-2 w-full sm:w-auto">
         <button
-          // onClick={() => handleCreateItem("folder")}
-          className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-sm transition"
+          onClick={() => onCreateItem("folder")}
+          className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5
+          bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-sm 
+          transition cursor-pointer"
         >
           + New Folder
         </button>
         <button
-          // onClick={() => handleCreateItem("file")}
-          className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-md text-xs font-semibold shadow-sm transition"
+          onClick={() => onCreateItem("file")}
+          className="flex-1 sm:flex-none justify-center inline-flex items-center px-3 py-1.5
+           bg-slate-800 hover:bg-slate-900 text-white rounded-md text-xs font-semibold 
+           shadow-sm transition cursor-pointer"
         >
           + New File
         </button>

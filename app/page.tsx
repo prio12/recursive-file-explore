@@ -7,6 +7,7 @@ import {
   deleteNode,
   findNodeById,
   findNodePath,
+  insertNode,
   renameNode,
   updateFileContent,
 } from "@/utils/fileUtils";
@@ -120,6 +121,38 @@ export default function Home() {
     if (selectedFile?.id === id) setSelectedFile(null);
   };
 
+  // 5. Action Handlers
+  const handleCreateItem = (type: "folder" | "file") => {
+    //taking name from the user
+    const itemName = prompt(`Enter name for new ${type}:`);
+    if (!itemName || !itemName.trim()) return;
+
+    let finalName = itemName.trim();
+
+    //if the type is file adding .txt as convention
+    if (type === "file" && !finalName.toLowerCase().endsWith(".txt")) {
+      finalName = `${finalName}.txt`;
+    }
+
+    console.log(finalName);
+
+    //checking if the siblings got the same name
+    const nameExists = activeFolder.children?.some(
+      (child) => child.name.toLowerCase() === finalName.trim().toLowerCase(),
+    );
+    if (nameExists) {
+      alert(
+        `An item named "${finalName.trim()}" already exists in this directory.`,
+      );
+      return;
+    }
+
+    //setting the File Tree with the updated returned nodes(after creating new node to it's parent container)
+    setFileTree((prev) =>
+      insertNode(prev, currentFolderId, finalName.trim(), type),
+    );
+  };
+
   //Get current folder
   const activeFolder = findNodeById(fileTree, currentFolderId) || fileTree[0];
 
@@ -186,6 +219,7 @@ export default function Home() {
             nodePath={nodePath}
             setCurrentFolderId={setCurrentFolderId}
             setSelectedFile={setSelectedFile}
+            onCreateItem={handleCreateItem}
           />
 
           {/* rendering all the folder/files in grid view */}
