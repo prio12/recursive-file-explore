@@ -1,14 +1,16 @@
 import { Menu } from "lucide-react";
 
-interface NavbarItemProps {
+interface NavbarProps {
   isMobileSidebarOpen: boolean;
   setIsMobileSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onResetStorage: () => void;
 }
 
 export const Navbar = ({
   isMobileSidebarOpen,
   setIsMobileSidebarOpen,
-}: NavbarItemProps) => {
+  onResetStorage,
+}: NavbarProps) => {
   return (
     <header className="flex items-center justify-between h-14 px-4 md:px-6 bg-white border-b border-slate-200 z-30 shadow-sm">
       <div className="flex items-center gap-3">
@@ -30,7 +32,11 @@ export const Navbar = ({
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="text-[10px] bg-red-50 cursor-pointer hover:bg-red-100 text-red-600 border border-red-100 px-2 py-1 rounded-md font-medium transition">
+        <button
+          onClick={onResetStorage}
+          className="text-[10px] bg-red-50 cursor-pointer
+         hover:bg-red-100 text-red-600 border border-red-100 px-2 py-1 rounded-md font-medium transition"
+        >
           Reset Data
         </button>
 

@@ -36,6 +36,7 @@ export default function Home() {
 
   //Handle initial data load safely on client mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasMounted(true);
     const savedTree = localStorage.getItem("file_tree");
     if (savedTree) {
@@ -153,11 +154,33 @@ export default function Home() {
     );
   };
 
+  const handleResetStorage = () => {
+    if (
+      !confirm(
+        "Reset workspace state? This will wipe all custom files created.",
+      )
+    )
+      return;
+
+    localStorage.removeItem("file_tree"); // Wipes storage matching your app's standard storage key name
+    setFileTree(initialFileSystem);
+    setCurrentFolderId("root");
+    setSelectedFile(null);
+  };
+
   //Get current folder
   const activeFolder = findNodeById(fileTree, currentFolderId) || fileTree[0];
 
   //Get current path (in which directory/folder the user is right now)
   const nodePath = findNodePath(fileTree, currentFolderId) || [];
+
+  if (!hasMounted) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-50 text-xs text-slate-400 font-medium">
+        Loading persistent directory workspace...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-slate-50 text-slate-800  overflow-hidden">
@@ -165,6 +188,7 @@ export default function Home() {
       <Navbar
         isMobileSidebarOpen={isMobileSidebarOpen}
         setIsMobileSidebarOpen={setIsMobileSidebarOpen}
+        onResetStorage={handleResetStorage}
       />
       <div className="flex flex-1 overflow-hidden relative">
         {isMobileSidebarOpen && (
