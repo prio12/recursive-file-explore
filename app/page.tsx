@@ -54,7 +54,10 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen bg-slate-50 text-slate-800  overflow-hidden">
       {/* navbar */}
-      <Navbar />
+      <Navbar
+        isMobileSidebarOpen={isMobileSidebarOpen}
+        setIsMobileSidebarOpen={setIsMobileSidebarOpen}
+      />
       <div className="flex flex-1 overflow-hidden relative">
         {isMobileSidebarOpen && (
           <div
@@ -66,13 +69,13 @@ export default function Home() {
         {/* left sidebar Item */}
         <aside
           className={`
-          fixed md:static top-0 bottom-0 left-0 z-20
-          w-64 bg-white border-r border-slate-200 
-          flex flex-col overflow-y-auto p-4 gap-2
-          transform transition-transform duration-200 ease-in-out
-          ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0
-        `}
+    fixed md:static top-0 bottom-0 left-0 z-20
+    w-64 bg-white border-r border-slate-200 
+    flex flex-col overflow-y-auto p-4 gap-2
+    transform transition-transform duration-700 ease-in-out
+    ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0
+  `}
         >
           <div className="flex items-center justify-between md:block mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
