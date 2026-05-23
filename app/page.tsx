@@ -116,7 +116,7 @@ export default function Home() {
     if (selectedFile?.id === id) setSelectedFile(null);
   };
 
-  // 5. Action Handlers
+  //create Item (folder/file)
   const handleCreateItem = (type: "folder" | "file") => {
     //taking name from the user
     const itemName = prompt(`Enter name for new ${type}:`);
