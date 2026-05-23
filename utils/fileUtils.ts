@@ -16,3 +16,23 @@ export const findNodeById = (
   }
   return null;
 };
+
+//updating a specific file content recursively
+export const updateFileContent = (
+  nodes: FileNode[],
+  fileId: string,
+  content: string,
+): FileNode[] => {
+  return nodes.map((node) => {
+    //if we find the targeted file return the new updated copy
+    if (node.id === fileId && node.type === "file") return { ...node, content };
+
+    //if the node has nested children dig dive and find the targeted file recursively
+    if (node.children)
+      return {
+        ...node,
+        children: updateFileContent(node.children, fileId, content),
+      };
+    return node;
+  });
+};
