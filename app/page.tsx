@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { initialFileSystem } from "../mockData";
 import { findNodeById } from "@/utils/fileUtils";
 import SidebarItem from "@/components/SidebarItem";
+import { Folder, File, Pencil, Trash } from "lucide-react";
 
 export default function Home() {
   // Initializing the file tree state with injected dummy data
@@ -18,6 +19,9 @@ export default function Home() {
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
     useState<boolean>(false);
+
+  //tracks the selected file , initialized with null
+  const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
 
   //Handle initial data load safely on client mount
   useEffect(() => {
@@ -45,7 +49,12 @@ export default function Home() {
   // Tracks which folder is clicked by the user to update the main workspace view
   const handleSelectFolder = (id: string) => {
     setCurrentFolderId(id);
-    // setIsMobileSidebarOpen(false);
+    setIsMobileSidebarOpen(false);
+  };
+
+  const handleOpenFile = (file: FileNode) => {
+    setSelectedFile(file);
+    // setEditorContent(file.content || "");
   };
 
   //Get current folder
@@ -103,6 +112,59 @@ export default function Home() {
             ))}
           </div>
         </aside>
+
+        {/* main Content */}
+        <main className="flex-1 flex flex-col overflow-y-auto p-4 md:p-6 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {activeFolder.children?.map((item) => (
+              <div
+                key={item.id}
+                onClick={() =>
+                  item.type === "folder"
+                    ? setCurrentFolderId(item.id)
+                    : handleOpenFile(item)
+                }
+                className="group relative flex flex-col items-center justify-center p-4 bg-white border border-slate-200 rounded-xl hover:shadow-md hover:border-blue-200 transition-all cursor-pointer text-center select-none"
+              >
+                <span className="text-4xl mb-2">
+                  {item.type === "folder" ? <Folder /> : <File />}
+                </span>
+                <span
+                  className="text-xs font-semibold text-slate-700  w-full px-2"
+                  title={item.name}
+                >
+                  {item.name}
+                </span>
+
+                <div
+                  className="absolute top-2 right-2 flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => e.stopPropagation()} // Keeps management taps separate from row navigation
+                >
+                  <button
+                    // onClick={() => handleRenameItem(item.id, item.name)}
+                    className="p-1.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded text-xs transition border border-slate-200"
+                    title="Rename"
+                  >
+                    <Pencil />{" "}
+                  </button>
+                  <button
+                    // onClick={() => handleDeleteItem(item.id)}
+                    className="p-1.5 bg-red-50 hover:bg-red-100 active:bg-red-200 rounded text-xs transition border border-red-100 text-red-600"
+                    title="Delete"
+                  >
+                    <Trash />
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {(!activeFolder.children || activeFolder.children.length === 0) && (
+              <div className="col-span-full py-16 text-center text-xs text-slate-400 font-medium">
+                This directory path is currently empty.
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
