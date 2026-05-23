@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📁 Mini File Explorer
 
-## Getting Started
+A simple virtual file explorer built with Next.js where you can create folders, files, navigate through a nested structure, rename, delete, and edit file content — all stored in localStorage.
 
-First, run the development server:
+This project is mainly focused on practicing recursive tree handling, state updates, and building a clean UI for a file-system-like experience in the browser.
+
+---
+
+## 🔗 Live Demo
+
+https://your-project-link.vercel.app  
+_(replace this after deployment)_
+
+---
+
+## 🚀 Features
+
+- Create folders and files
+- Rename and delete items
+- Nested folder navigation (recursive structure)
+- Breadcrumb-style path navigation
+- File editor with save functionality
+- Persistent storage using localStorage
+- Mobile responsive sidebar
+- Clean grid-based file view
+
+---
+
+## 🧠 What I focused on while building this
+
+- Managing a nested tree structure in React state
+- Writing clean recursive utility functions for:
+  - finding nodes
+  - inserting items
+  - renaming and deleting nodes
+- Keeping state updates immutable
+- Separating logic into utility functions
+- Making navigation feel smooth and predictable
+
+---
+
+## 🛠 Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- React Hooks
+- Tailwind CSS
+- Lucide Icons
+- localStorage for persistence
+
+---
+
+## 📦 Getting Started
+
+Clone the project:
 
 ```bash
+git clone <your-repo-url>
+cd <project-folder>
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+Then Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📌 Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Data persistence** — All data is stored in the browser's `localStorage`. No backend or database is involved.
+- **Refresh-safe** — Refreshing the page keeps your file structure intact.
+- **Scope** — Designed as a lightweight file system simulation, not a real database system.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---

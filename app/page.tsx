@@ -58,12 +58,6 @@ export default function Home() {
     localStorage.setItem("file_tree", JSON.stringify(fileTree));
   }, [fileTree, hasMounted]);
 
-  // Tracks which folder is clicked by the user to update the main workspace view
-  const handleSelectFolder = (id: string) => {
-    setCurrentFolderId(id);
-    setIsMobileSidebarOpen(false);
-  };
-
   const handleOpenFile = (file: FileNode) => {
     setSelectedFile(file);
     setEditorContent(file.content || "");
