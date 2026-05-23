@@ -4,8 +4,10 @@ import { FileNode } from "@/types/types";
 import { useEffect, useState } from "react";
 import { initialFileSystem } from "../mockData";
 import {
+  deleteNode,
   findNodeById,
   findNodePath,
+  renameNode,
   updateFileContent,
 } from "@/utils/fileUtils";
 import SidebarItem from "@/components/sidebar/SidebarItem";
@@ -71,6 +73,51 @@ export default function Home() {
       updateFileContent(prev, selectedFile.id, editorContent),
     );
     alert("Changes saved successfully!");
+  };
+
+  //rename a folder/file
+  const handleRenameItem = (id: string, currentName: string) => {
+    //collecting the newName from the user
+    const newName = prompt("Rename item to:", currentName);
+    if (!newName || !newName.trim() || newName === currentName) return;
+
+    //to prevent duplication of same children name
+    const nameExists = activeFolder.children?.some(
+      (child) =>
+        child.id !== id &&
+        child.name.toLowerCase() === newName.trim().toLowerCase(),
+    );
+    if (nameExists) {
+      alert(
+        `An item named "${newName.trim()}" already exists in this directory.`,
+      );
+      return;
+    }
+
+    //if the the name is not duplicated we need to find the targeted node
+    setFileTree((prev) => renameNode(prev, id, newName.trim()));
+
+    // If the renamed item is currently open in the editor, update its tab name too
+    if (selectedFile?.id === id) {
+      setSelectedFile((prev) =>
+        prev ? { ...prev, name: newName.trim() } : null,
+      );
+    }
+  };
+
+  //delete an item (file or folder)
+  const handleDeleteItem = (id: string) => {
+    //getting confirmation from the user
+    if (!confirm("Are you sure you want to permanently delete this item?"))
+      return;
+    //resetting the fileTree based on the filtered nodes
+    setFileTree((prev) => deleteNode(prev, id));
+
+    // If we just deleted the folder the user is looking at, sent them back to root
+    if (currentFolderId === id) setCurrentFolderId("root");
+
+    // If the deleted file is currently open in the main text editor, close it
+    if (selectedFile?.id === id) setSelectedFile(null);
   };
 
   //Get current folder
@@ -146,6 +193,8 @@ export default function Home() {
             activeFolder={activeFolder}
             setCurrentFolderId={setCurrentFolderId}
             handleOpenFile={handleOpenFile}
+            onRenameItem={handleRenameItem}
+            onDeleteItem={handleDeleteItem}
           />
         </main>
         {/* rendering the file */}
