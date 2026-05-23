@@ -36,3 +36,25 @@ export const updateFileContent = (
     return node;
   });
 };
+
+// find the node path (in which folder/ directory the user is right now)
+export const findNodePath = (
+  nodes: FileNode[],
+  targetId: string,
+  path: FileNode[] = [],
+): FileNode[] | null => {
+  for (const node of nodes) {
+    // Build the current path including this node
+    const currentPath = [...path, node];
+
+    // If we found the target, return the path array
+    if (node.id === targetId) return currentPath;
+
+    // If it's a folder with children, recursively search deeper
+    if (node.children) {
+      const foundPath = findNodePath(node.children, targetId, currentPath);
+      if (foundPath) return foundPath;
+    }
+  }
+  return null;
+};
