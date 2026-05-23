@@ -58,3 +58,36 @@ export const findNodePath = (
   }
   return null;
 };
+
+//rename a folder/ file using the targetId
+export const renameNode = (
+  nodes: FileNode[],
+  targetId: string,
+  newName: string,
+): FileNode[] => {
+  return nodes.map((node) => {
+    //if we find the targeted id we are copying it's existing properties and changing the name and returning it
+    if (node.id === targetId) return { ...node, name: newName };
+
+    //if it has nested children we need to recursively search deeper to find it
+    if (node.children)
+      return {
+        ...node,
+        children: renameNode(node.children, targetId, newName),
+      };
+    return node;
+  });
+};
+
+//Delete a node (file/folder)
+export const deleteNode = (nodes: FileNode[], targetId: string): FileNode[] => {
+  //returning all the nodes that are not affected by filtering based on the condition
+  return nodes
+    .filter((node) => node.id !== targetId)
+    .map((node) => {
+      //if the node has nested children gotta filter those out recursively
+      if (node.children)
+        return { ...node, children: deleteNode(node.children, targetId) };
+      return node;
+    });
+};
